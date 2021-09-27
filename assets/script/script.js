@@ -31,7 +31,7 @@ return fetch (`https://api.openweathermap.org/data/2.5/onecall?lat=` +
  lat +
  `&lon=` +
  lon +
- `&units=imperial&exclude={part}&appid=75cb3a1aef14540eff42305c1ab0888d`)
+ `&units=imperial&exclude=hourly,minutely&appid=75cb3a1aef14540eff42305c1ab0888d`)
 
 
  .then(function(response) {
@@ -47,15 +47,16 @@ return fetch (`https://api.openweathermap.org/data/2.5/onecall?lat=` +
     var local_date = moment.utc(utcTime).local().format('MM-DD-YYYY')
       console.log(local_date)
 
+      // Display the city name in the span input
+    const cityEl = document.querySelector("#city-name")
+    cityEl.textContent = cityName + " " + "(" + local_date + ")"
+      
+      
       //create variable for icon
       let weatherIcon = response.current.weather[0].icon
       console.log(weatherIcon)
       iconEl = document.querySelector("#current-pic")
       iconEl.setAttribute('src', "http://openweathermap.org/img/wn/" + weatherIcon + "@2x.png")
-      
-      // Display the city name in the span input
-    const cityEl = document.querySelector("#city-name")
-    cityEl.textContent = cityName + " " + "(" + local_date + ")"
       
       
      //create a variable to hold the temperature
@@ -88,34 +89,53 @@ return fetch (`https://api.openweathermap.org/data/2.5/onecall?lat=` +
 
 
   //create variables for the 5 day forecast
+  const forecastEls = document.querySelectorAll(".forecast");
+            for (i=0; i<5; i++) {
+
+              const forecastIndex = i+1
+                
+              let utcTimeForecast = response.daily[forecastIndex].dt*1000
+              console.log(utcTime)
+            var date = moment.utc(utcTimeForecast).local().format('MM-DD-YYYY')
+              console.log(date)
+
+              forecastEls[i].innerHTML = ""
+              
+              
+                const forecastDateEl = document.createElement("p")
+                forecastDateEl.setAttribute("class","mt-3 mb-0 forecast-date");
+                forecastDateEl.innerHTML = date
+                forecastEls[i].append(forecastDateEl)
+
+                const forecastWeatherEl = document.createElement("img");
+                forecastWeatherEl.setAttribute("src","https://openweathermap.org/img/wn/" + response.daily[forecastIndex].weather[0].icon + "@2x.png");
+                forecastEls[i].append(forecastWeatherEl)
+
+                const forecastTemp = response.daily[forecastIndex].temp.day
+                console.log(forecastTemp)
+                const forecastTempEl = document.createElement("p")
+                forecastTempEl.setAttribute("class","mt-3 mb-0 forecast-temp");
+                forecastTempEl.innerHTML = ("Temp:" + " " + forecastTemp + "°F")
+                forecastEls[i].append(forecastTempEl)
+
+                const forecastWind = response.daily[forecastIndex].wind_speed
+                const forecastWindEl = document.createElement("p")
+                forecastWindEl.setAttribute("class","mt-3 mb-0 forecast-wind_speed");
+                forecastWindEl.innerHTML = ("Wind:" + " " + forecastWind + "MPH")
+                forecastEls[i].append(forecastWindEl)
+
+                const forecastHumidity = response.daily[forecastIndex].humidity
+                const forecastHumidityEl = document.createElement("p")
+                forecastHumidityEl.setAttribute("class","mt-3 mb-0 forecast-humidity");
+                forecastHumidityEl.innerHTML = ("Humidity:" + " " + forecastHumidity + "%")
+                forecastEls[i].append(forecastHumidityEl)
+
+
+            }
+
+
 
 })
 })
 
 }
-
-// .then(function(wikiResponse) {
-//   return wikiResponse.json();
-// })
-// .then(function(wikiResponse) {
-//   console.log(wikiResponse)
-//   // Create a variable to hold the title of the Wikipedia article
-//   // YOUR CODE HERE
-//   var title = wikiResponse.query.random[0].title
-//   
-//   // YOUR CODE HERE
-//   var headingEl = document.createElement("h2")
-//   headingEl.textContent = title
-//   var responseEl = document.getElementById("response-container")
-//   responseEl.innerHTML = ""
-//   responseEl.appendChild(headingEl)
-//   var rating = document.getElementById("rating").nodeValue
-//   return fetch( 'https://api.giphy.com/v1/gifs/search?q=' +
-//   searchTerm +
-//   '&rating=' +
-//   rating +
-//   '&api_key=HvaacROi9w5oQCDYHSIk42eiDSIXH3FN&limit=1')
-  // Return a fetch request to the Giphy search API with the article title and rating parameters
-  // YOUR CODE HERE
-  //
-  // Remember to add your API key at the end
