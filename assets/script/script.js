@@ -1,4 +1,6 @@
 
+
+
 //create a function called searchWeather
 function searchWeather() {
 
@@ -7,6 +9,7 @@ function searchWeather() {
 const searchCity = document.querySelector("#city-input").value
 
 
+  
 fetch (`http://api.openweathermap.org/geo/1.0/direct?q=`+
 searchCity +
 `&limit=5&appid=75cb3a1aef14540eff42305c1ab0888d`)
@@ -41,15 +44,15 @@ return fetch (`https://api.openweathermap.org/data/2.5/onecall?lat=` +
      console.log(response);
   
    
-    //convert dt time to local time
-    let utcTime = response.current.dt*1000
+      //convert dt time to local time
+      let utcTime = response.current.dt*1000
       console.log(utcTime)
-    var local_date = moment.utc(utcTime).local().format('MM-DD-YYYY')
+      var local_date = moment.utc(utcTime).local().format('MM-DD-YYYY')
       console.log(local_date)
 
       // Display the city name in the span input
-    const cityEl = document.querySelector("#city-name")
-    cityEl.textContent = cityName + " " + "(" + local_date + ")"
+      const cityEl = document.querySelector("#city-name")
+      cityEl.textContent = cityName + " " + "(" + local_date + ")"
       
       
       //create variable for icon
@@ -59,44 +62,44 @@ return fetch (`https://api.openweathermap.org/data/2.5/onecall?lat=` +
       iconEl.setAttribute('src', "http://openweathermap.org/img/wn/" + weatherIcon + "@2x.png")
       
       
-     //create a variable to hold the temperature
-  const temp = response.current.temp
-  console.log(temp)
-     //Display the temperature
-  const tempEl = document.querySelector("#temperature")
-  tempEl.textContent =("Temp:" + " " + temp + "°F")
+      //create a variable to hold the temperature
+      const temp = response.current.temp
+      console.log(temp)
+      //Display the temperature
+      const tempEl = document.querySelector("#temperature")
+      tempEl.textContent =("Temp:" + " " + temp + "°F")
 
-  //create a variable to hold the wind
-  const wind = response.current.wind_speed
-  console.log(wind)
-    //Display the wind speed in MPH
-  const windEl = document.querySelector("#wind-speed")
-  windEl.textContent = ("Wind:" + " " + wind + "MPH")
+      //create a variable to hold the wind
+      const wind = response.current.wind_speed
+      console.log(wind)
+      //Display the wind speed in MPH
+      const windEl = document.querySelector("#wind-speed")
+      windEl.textContent = ("Wind:" + " " + wind + "MPH")
   
-  //create a variable to hold the humidity
-  const humidity = response.current.humidity
-  console.log(humidity)
-    //Display the humidity in %
-  const humidityEl = document.querySelector("#humidity")
-  humidityEl.textContent = ("Humidity:" + " " + humidity + "%")
+      //create a variable to hold the humidity
+      const humidity = response.current.humidity
+      console.log(humidity)
+      //Display the humidity in %
+      const humidityEl = document.querySelector("#humidity")
+      humidityEl.textContent = ("Humidity:" + " " + humidity + "%")
 
-  //create a variable to hold the UV index
-  const uvIndex = response.current.uvi
-  console.log(uvIndex)
-    //Display the uv index
-  const uvIndexEl = document.querySelector("#UV-index")
-  uvIndexEl.textContent = ("UV" + " " + "Index:" + " " + uvIndex)
+      //create a variable to hold the UV index
+      const uvIndex = response.current.uvi
+      console.log(uvIndex)
+      //Display the uv index
+      const uvIndexEl = document.querySelector("#UV-index")
+      uvIndexEl.textContent = ("UV" + " " + "Index:" + " " + uvIndex)
 
 
-  //create variables for the 5 day forecast
-  const forecastEls = document.querySelectorAll(".forecast");
+      //create variables for the 5 day forecast
+      const forecastEls = document.querySelectorAll(".forecast");
             for (i=0; i<5; i++) {
 
               const forecastIndex = i+1
                 
               let utcTimeForecast = response.daily[forecastIndex].dt*1000
               console.log(utcTime)
-            var date = moment.utc(utcTimeForecast).local().format('MM-DD-YYYY')
+              var date = moment.utc(utcTimeForecast).local().format('MM-DD-YYYY')
               console.log(date)
 
               forecastEls[i].innerHTML = ""
@@ -132,10 +135,50 @@ return fetch (`https://api.openweathermap.org/data/2.5/onecall?lat=` +
 
 
             }
+            
+            
+            
+            
+            //local storage
+            //variables for local storage and search menu
+            
+            const historyEl = document.getElementById("history");
+            let searchHistory = JSON.parse(localStorage.getItem("search")) || [];
+                  console.log(searchHistory)
+            
+
+                  renderSearchHistory()
+
+            searchHistory.push(searchCity)
+            localStorage.setItem("search", JSON.stringify(searchHistory))
+
+
+            
+                  
 
 
 
+
+            function renderSearchHistory() {
+              historyEl.innerHTML = "";
+                for (let i=0; i<searchHistory.length; i++) {
+                const historyItem = document.createElement("input");
+            // <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="email@example.com"></input>
+            historyItem.setAttribute("type","text");
+            historyItem.setAttribute("readonly",true);
+            historyItem.setAttribute("class", "form-control d-block bg-white");
+            historyItem.setAttribute("value", searchHistory[i]);
+            historyItem.addEventListener("click",function() {
+                searchWeather(historyItem.value);
+            })
+            historyEl.append(historyItem);
+        }
+      }
+      
+          
 })
 })
+
+      
 
 }
