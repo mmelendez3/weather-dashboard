@@ -1,6 +1,4 @@
 
-
-
 //create a function called searchWeather
 function searchWeather() {
 
@@ -141,31 +139,33 @@ return fetch (`https://api.openweathermap.org/data/2.5/onecall?lat=` +
             
             //local storage
             //variables for local storage and search menu
-            
             const historyEl = document.getElementById("history");
             let searchHistory = JSON.parse(localStorage.getItem("search")) || [];
                   console.log(searchHistory)
-            
-
+                  checkAppendLength()
                   renderSearchHistory()
 
             searchHistory.push(searchCity)
             localStorage.setItem("search", JSON.stringify(searchHistory))
 
-
+             
             
+            const clearEl = document.getElementById("clear-history")
+            clearEl.addEventListener("click",function() {
+              searchHistory = []
+              localStorage.clear()
+              renderSearchHistory();
+          })
                   
-
-
-
 
             function renderSearchHistory() {
               historyEl.innerHTML = "";
                 for (let i=0; i<searchHistory.length; i++) {
                 const historyItem = document.createElement("input");
-            // <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="email@example.com"></input>
+            // <input type
             historyItem.setAttribute("type","text");
             historyItem.setAttribute("readonly",true);
+            historyItem.setAttribute("id", "list")
             historyItem.setAttribute("class", "form-control d-block bg-white");
             historyItem.setAttribute("value", searchHistory[i]);
             historyItem.addEventListener("click",function() {
@@ -173,12 +173,21 @@ return fetch (`https://api.openweathermap.org/data/2.5/onecall?lat=` +
             })
             historyEl.append(historyItem);
         }
-      }
-      
-          
-})
-})
 
-      
+      }
+
+      function checkAppendLength() {
+      const howManyNewDivs = document.querySelectorAll("#list")
+      console.log(howManyNewDivs)
+
+        if(howManyNewDivs.length > 3) {
+        howManyNewDivs[0].remove()
+        }
+      }
+            
+})
+})
 
 }
+
+
