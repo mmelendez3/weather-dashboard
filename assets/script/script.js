@@ -8,7 +8,7 @@ const searchCity = document.querySelector("#city-input").value
 
 
   
-fetch (`http://api.openweathermap.org/geo/1.0/direct?q=`+
+fetch (`https://api.openweathermap.org/geo/1.0/direct?q=`+
 searchCity +
 `&limit=5&appid=75cb3a1aef14540eff42305c1ab0888d`)
 
